@@ -1,0 +1,12 @@
+{
+    "java.test.config": [
+        {
+            "name": "APISpeechDIO",
+            "workingDirectory": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ],
+    "java.test.defaultConfig": "APISpeechDIO",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.compile.nullAnalysis.mode": "automatic"
+}
