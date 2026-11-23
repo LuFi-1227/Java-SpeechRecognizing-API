@@ -1,0 +1,5 @@
+### Verificar se a API está funcionando
+# GET http://localhost:8080/api/chat-model/
+
+
+GET https://congenial-yodel-vxpxwgqjp54cx75-8080.app.github.dev/api/chat-client?prompt="Olá, como você está?"
