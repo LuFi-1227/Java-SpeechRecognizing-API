@@ -25,6 +25,13 @@ public class AITest {
             )
         );
 
+        assert response.getResult().getOutput().getText() != null;
+        if (response.getResult().getOutput().getText() == null) {
+            throw new RuntimeException("Response text is null");
+        }else{
+            assert response.getResult().getOutput().getText().length() > 0;
+            assert response.getResult().getOutput().getText().contains("Blackbeard");
+        }
         System.out.println(response.getResult().getOutput().getText());
     }
 }
