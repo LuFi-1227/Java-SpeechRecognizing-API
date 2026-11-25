@@ -1,10 +1,13 @@
 package com.application.budgeting.application;
 
-import java.util.Locale.Category;
+import org.springframework.stereotype.Service;
 
+import com.application.budgeting.application.input.TransactionInput;
+import com.application.budgeting.application.output.TransactionOutput;
 import com.application.budgeting.domain.Transaction;
 import com.application.budgeting.domain.TransactionRepository;
 
+@Service 
 public class PersistTransactionUseCase {
     private final TransactionRepository transactionRepository;
 
@@ -12,8 +15,9 @@ public class PersistTransactionUseCase {
         this.transactionRepository = transactionRepository;
     }
 
-    public void execute(String description, long amount, Category category){
-        var transaction = new Transaction(description, amount, category);
+    public TransactionOutput execute(TransactionInput input){
+        var transaction = transactionRepository.save(new Transaction(input.description(), input.amount(), input.category()));
+        return TransactionOutput.from(transaction);
 
     }
 }
