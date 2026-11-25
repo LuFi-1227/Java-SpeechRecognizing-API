@@ -1,6 +1,7 @@
 package com.application.budgeting;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +17,7 @@ public class ChatClientController {
     }
 
     @GetMapping ("/chat-client")
-    public String chat(@RequestParam String prompt) {
+    public String chat(@RequestParam @NonNull String prompt) {
         var response = chatClient.prompt(prompt).call().content();
         return response;
     }
