@@ -2,4 +2,11 @@
 # GET http://localhost:8080/api/chat-model/
 
 
-GET https://congenial-yodel-vxpxwgqjp54cx75-8080.app.github.dev/api/chat-client?prompt="Olá, como você está?"
+# GET https://congenial-yodel-vxpxwgqjp54cx75-8080.app.github.dev/api/chat-client?prompt="Olá, como você está?"
+
+POST http://localhost:8080/api/synthesize
+Content-Type: application/json
+
+{
+    "text": "Boa noite, Biazinha"
+}

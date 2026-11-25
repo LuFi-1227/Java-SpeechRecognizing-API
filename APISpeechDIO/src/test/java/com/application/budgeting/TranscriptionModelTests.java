@@ -6,6 +6,7 @@ import org.springframework.ai.openai.OpenAiAudioTranscriptionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 @SpringBootTest 
 public class TranscriptionModelTests {
@@ -14,18 +15,14 @@ public class TranscriptionModelTests {
 
     @ParameterizedTest 
     @CsvSource({
-        "src/test/resources/audio/test1.wav, Paguei cinquenta reais no supermercado",
-        "src/test/resources/audio/test2.wav, Recebi cem reais no banco",
-        "src/test/resources/audio/test3.wav, Comprei trinta reais na padaria",
-        "src/test/resources/audio/test4.wav, Fui ao cinema",
-        "src/test/resources/audio/test5.wav, Paguei vinte e cinco reais no restaurante"
+        "/tmp/audio10179348243290264525.mp3, valor de serviço",
     })
     void shouldTranscribeAudioFile(String audioFilePath, String expectedKeywords) {
-        var recordingFile = new ClassPathResource(audioFilePath);
+        var recordingFile = new FileSystemResource(audioFilePath);
 
         var transcription = transcriptionModel.call(recordingFile);
 
+        System.out.println("\n\n\nTranscription: " + transcription + "\n\n\n");
         assert transcription.contains(expectedKeywords);
-        System.out.println("Transcription: " + transcription);
     }
 }

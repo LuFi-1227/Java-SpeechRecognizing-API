@@ -1,25 +1,25 @@
 package com.application.budgeting;
 
-import org.springframework.ai.openai.OpenAiAudioTranscriptionModel;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ai.audio.transcription.TranscriptionModel;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
 public class TranscriptionModelController {
-    private final OpenAiAudioTranscriptionModel transcriptionModel;
+    private final TranscriptionModel transcriptionModel;
 
-    public TranscriptionModelController(OpenAiAudioTranscriptionModel transcriptionModel) {
+    public TranscriptionModelController(TranscriptionModel transcriptionModel) {
         this.transcriptionModel = transcriptionModel;
     }
 
-    @GetMapping("/transcription-model")
-    public String transcribe(@RequestParam String audioFilePath) {
-        var recordingFile = new ClassPathResource(audioFilePath);
-        var transcription = transcriptionModel.call(recordingFile);
+    @PostMapping(value = "/transcription", consumes = "multipart/form-data")
+    public String transcribe(@RequestParam("file") MultipartFile file) {
+        var resource = file.getResource();
+        var transcription = transcriptionModel.transcribe(resource);
         return transcription;
     }
     
