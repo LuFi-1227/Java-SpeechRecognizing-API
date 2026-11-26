@@ -1,6 +1,7 @@
 package com.application.budgeting.infrastructure.persistence.repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +27,8 @@ public class JPATransactionRepository implements TransactionRepository {
     }
 
     @Override
-    public List<Transaction> findAllByCategory(Category category) {
-        return repository.findAllByCategory(category).stream().map(TransactionEntity::toDomain).toList();
+    public List<Transaction> findAllByUserIdAndCategory(UUID userId, Category category) {
+        return repository.findAllByUserIdAndCategory(userId, category).stream().map(TransactionEntity::toDomain).toList();
     }
     
 }

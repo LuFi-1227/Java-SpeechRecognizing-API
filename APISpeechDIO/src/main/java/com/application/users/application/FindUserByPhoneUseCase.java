@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import com.application.users.application.input.SplitedUserInput;
 import com.application.users.application.output.UserOutput;
 import com.application.users.domain.UserRepository;
-
+import com.application.users.domain.Phone;
+import com.application.users.domain.UserNotFoundException;
 @Service 
 public class FindUserByPhoneUseCase {
     private final UserRepository userRepository;
@@ -15,6 +16,7 @@ public class FindUserByPhoneUseCase {
     }
 
     public UserOutput execute(SplitedUserInput input){
-        return UserOutput.from(userRepository.findByPhone(input.phone()));
+        var phone = new Phone(input.phone());
+        return UserOutput.from(userRepository.findByPhone(phone.value()).orElseThrow(() -> new UserNotFoundException("User not found by PHONE")));
     }
 }

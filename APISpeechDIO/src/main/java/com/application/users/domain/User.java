@@ -8,10 +8,10 @@ import lombok.Getter;
 public class User {
     private UserId id;
     private String name;
-    private String phone;
+    private Phone phone;
     private String email;
 
-    public User(String name, String phone, String email){
+    public User(String name, Phone phone, String email){
         this.id = new UserId();
         this.name = name;
         this.phone = phone;

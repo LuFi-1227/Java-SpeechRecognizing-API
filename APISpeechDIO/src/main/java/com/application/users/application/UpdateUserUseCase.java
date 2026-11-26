@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import com.application.users.application.input.SplitedUserInput;
 import com.application.users.application.input.UserInput;
 import com.application.users.application.output.UserOutput;
+import com.application.users.domain.Phone;
 import com.application.users.domain.User;
 import com.application.users.domain.UserId;
+import com.application.users.domain.UserNotFoundException;
 import com.application.users.domain.UserRepository;
 
 @Service 
@@ -18,6 +20,6 @@ public class UpdateUserUseCase {
     }
 
     public UserOutput execute(UserInput user, SplitedUserInput input){
-        return UserOutput.from(userRepository.update(new UserId(input.id()), new User(user.name(), user.phone(), user.email())));
+        return UserOutput.from(userRepository.update(new UserId(input.id()), new User(user.name(), new Phone(user.phone()), user.email())).orElseThrow(() -> new UserNotFoundException("User not found by ID")));
     }
 }

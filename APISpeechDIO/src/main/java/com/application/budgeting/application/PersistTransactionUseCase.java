@@ -1,5 +1,8 @@
 package com.application.budgeting.application;
 
+import java.util.UUID;
+
+import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +19,15 @@ public class PersistTransactionUseCase {
         this.transactionRepository = transactionRepository;
     }
 
-    @Tool(name = "persist-transaction", description = "Persiste no banco de dados uma nova transação financeira")
-    public TransactionOutput execute(TransactionInput input){
-        var transaction = transactionRepository.save(new Transaction(input.description(), input.amount(), input.category()));
+    public TransactionOutput execute(UUID userId, TransactionInput input){
+        var transaction = transactionRepository.save(new Transaction(userId, input.description(), input.amount(), input.category()));
         return TransactionOutput.from(transaction);
-
+        
     }
+    
+    @Tool(name = "persist-transaction", description = "Persiste no banco de dados uma nova transação financeira")
+    public TransactionOutput executeTool(TransactionInput input, ToolContext toolContext) {                         
+        UUID userId = (UUID) toolContext.getContext().get("userId");                                                
+        return execute(userId, input);                                                                              
+    }  
 }

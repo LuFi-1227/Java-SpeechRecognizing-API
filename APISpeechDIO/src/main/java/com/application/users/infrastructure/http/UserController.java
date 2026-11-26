@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ import com.application.users.infrastructure.http.requests.UserPhoneRequest;
 import com.application.users.infrastructure.http.requests.UserRequest;
 import com.application.users.infrastructure.http.responses.UserResponse;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -61,19 +62,19 @@ public class UserController {
 
     @GetMapping (params = "phone")
     @ResponseStatus (HttpStatus.OK)
-    public UserResponse findByPhone(@ModelAttribute UserPhoneRequest request){
+    public UserResponse findByPhone(@Valid @ModelAttribute UserPhoneRequest request){
         return UserResponse.from(this.findUserByPhoneUseCase.execute(request.toInput()));
     }
 
     @PostMapping 
     @ResponseStatus (HttpStatus.CREATED)
-    public UserResponse persistUser(@RequestBody UserRequest request){
+    public UserResponse persistUser(@Valid @RequestBody UserRequest request){
         return UserResponse.from(this.persistUserUseCase.execute(request.toInput()));
     }
 
     @PutMapping 
     @ResponseStatus (HttpStatus.OK)
-    public UserResponse updateUser(@RequestBody UpdateUserRequest request){
+    public UserResponse updateUser(@Valid @RequestBody UpdateUserRequest request){
         return UserResponse.from(this.updateUserUseCase.execute(request.toInput(), new UserIdRequest(request.id()).toInput()));
     }
 

@@ -2,6 +2,7 @@ package com.application.users.infrastructure.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -37,18 +38,24 @@ public class JPAUserRepository implements UserRepository{
     }
 
     @Override
-    public User findById(@NonNull UserId id) {
-        return userEntityRepository.findById(id.id()).orElse(null).toDomain();
+    public Optional<User> findById(@NonNull UserId id) {
+        return userEntityRepository.findById(id.id()).map(UserEntity::toDomain);
     }
 
     @Override
-    public User findByPhone(String phone) {
-        return userEntityRepository.findByPhone(phone).orElse(null).toDomain();
+    public Optional<User> findByPhone(String phone) {
+        return userEntityRepository.findByPhone(phone).map(UserEntity::toDomain);
     }
 
     @Override
-    public User update(UserId id, User user) {
-        return userEntityRepository.update(UserEntity.from(user), id.id()).orElse(null).toDomain();
+    public Optional<User> update(UserId id, User user) {
+        return userEntityRepository.findById(id.id())
+                .map(existingUser -> {
+                    UserEntity updatedUser = UserEntity.from(user);
+                    updatedUser.setId(existingUser.getId());
+
+                    return userEntityRepository.save(updatedUser).toDomain();
+                });
     }
 
     @Override

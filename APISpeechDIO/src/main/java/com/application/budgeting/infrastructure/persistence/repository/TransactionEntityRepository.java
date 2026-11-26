@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 import com.application.budgeting.infrastructure.persistence.entity.TransactionEntity;
 
 public interface TransactionEntityRepository extends CrudRepository<TransactionEntity, UUID>{
-    public List<TransactionEntity> findAllByCategory(Category category);
+    public List<TransactionEntity> findAllByUserIdAndCategory(UUID userId, Category category);
 }

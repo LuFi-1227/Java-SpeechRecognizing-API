@@ -9,5 +9,4 @@ import com.application.users.infrastructure.persistence.entity.UserEntity;
 
 public interface UserEntityRepository extends CrudRepository<UserEntity, UUID>{
     Optional<UserEntity> findByPhone(String phone);
-    Optional<UserEntity> update(UserEntity user, UUID id);
 }

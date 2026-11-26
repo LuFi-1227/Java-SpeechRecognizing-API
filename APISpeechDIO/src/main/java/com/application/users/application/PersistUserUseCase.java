@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.application.users.application.input.UserInput;
 import com.application.users.application.output.UserOutput;
+import com.application.users.domain.Phone;
 import com.application.users.domain.User;
 import com.application.users.domain.UserRepository;
 
@@ -16,6 +17,6 @@ public class PersistUserUseCase {
     }
 
     public UserOutput execute(UserInput user){
-        return UserOutput.from(userRepository.save(new User(user.name(), user.phone(), user.email())));
+        return UserOutput.from(userRepository.save(new User(user.name(), new Phone(user.phone()), user.email())));
     } 
 }
