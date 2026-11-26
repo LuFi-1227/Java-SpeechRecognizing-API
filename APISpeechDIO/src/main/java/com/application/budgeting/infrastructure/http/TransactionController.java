@@ -31,6 +31,9 @@ import com.application.budgeting.application.ListTransactionByCategoryUseCase;
 import com.application.budgeting.application.PersistTransactionUseCase;
 import com.application.budgeting.infrastructure.http.requests.TransactionRequest;
 import com.application.budgeting.infrastructure.http.responses.TransactionResponse;
+
+import jakarta.validation.Valid;
+
 import com.application.budgeting.domain.Category;
 
 @RestController 
@@ -60,7 +63,7 @@ public class TransactionController {
 
     @PostMapping
     @ResponseStatus (HttpStatus.CREATED)
-    public TransactionResponse createTransaction(@PathVariable UUID userId, @RequestBody TransactionRequest request){
+    public TransactionResponse createTransaction(@PathVariable UUID userId, @Valid @RequestBody TransactionRequest request){
         var transaction = persistTransactionUseCase.execute(userId, request.toInput());
         return TransactionResponse.from(transaction);
     }

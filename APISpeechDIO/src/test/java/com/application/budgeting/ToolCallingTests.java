@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest 
-//@EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".+")
+@EnabledIfEnvironmentVariable(named = "GROQ_API_KEY", matches = ".+")
 public class ToolCallingTests {
     @Autowired 
     OpenAiChatModel chatModel;

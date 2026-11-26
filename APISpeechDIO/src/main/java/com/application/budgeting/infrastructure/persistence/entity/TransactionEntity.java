@@ -1,6 +1,10 @@
 package com.application.budgeting.infrastructure.persistence.entity;
 
+import java.time.Instant;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.application.budgeting.domain.Transaction;
 import com.application.budgeting.domain.TransactionId;
@@ -26,6 +30,14 @@ public class TransactionEntity {
     private long amount;
     @Enumerated (EnumType.STRING)
     private Category category;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
 
     public TransactionEntity(UUID id, UUID userId, String description, long amount, Category category) {

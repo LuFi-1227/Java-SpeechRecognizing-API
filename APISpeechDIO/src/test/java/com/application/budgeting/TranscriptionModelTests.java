@@ -1,5 +1,6 @@
 package com.application.budgeting;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.ai.openai.OpenAiAudioTranscriptionModel;
@@ -9,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 @SpringBootTest 
+@Disabled("Requer arquivo de áudio local no caminho especificado")
 public class TranscriptionModelTests {
     @Autowired 
     private OpenAiAudioTranscriptionModel transcriptionModel;

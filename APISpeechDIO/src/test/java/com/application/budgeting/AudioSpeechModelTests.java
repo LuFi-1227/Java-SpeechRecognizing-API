@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest 
+@EnabledIfEnvironmentVariable(named = "GROQ_API_KEY", matches = ".+")
 public class AudioSpeechModelTests {
     @Autowired 
     private OpenAiAudioSpeechModel speechModel;

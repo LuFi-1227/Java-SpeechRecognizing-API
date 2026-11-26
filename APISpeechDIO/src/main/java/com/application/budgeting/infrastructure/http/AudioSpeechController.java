@@ -1,4 +1,4 @@
-package com.application.budgeting;
+package com.application.budgeting.infrastructure.http;
 
 import org.springframework.ai.audio.tts.TextToSpeechModel;
 import org.springframework.core.io.ByteArrayResource;

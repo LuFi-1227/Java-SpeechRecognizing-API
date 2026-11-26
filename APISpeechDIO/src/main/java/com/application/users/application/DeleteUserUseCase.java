@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.application.users.application.input.SplitedUserInput;
 import com.application.users.domain.UserId;
+import com.application.users.domain.UserNotFoundException;
 import com.application.users.domain.UserRepository;
 
 @Service 
@@ -15,6 +16,9 @@ public class DeleteUserUseCase {
     }
 
     public void execute(SplitedUserInput input){
+        if (userRepository.findById(new UserId(input.id())).isEmpty()){
+            throw new UserNotFoundException("User not found to be deleted");
+        }
         userRepository.delete(new UserId(input.id()));
     }
 }

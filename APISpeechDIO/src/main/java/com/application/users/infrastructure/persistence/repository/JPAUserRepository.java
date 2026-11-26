@@ -53,6 +53,7 @@ public class JPAUserRepository implements UserRepository{
                 .map(existingUser -> {
                     UserEntity updatedUser = UserEntity.from(user);
                     updatedUser.setId(existingUser.getId());
+                    updatedUser.setCreatedAt(existingUser.getCreatedAt());
 
                     return userEntityRepository.save(updatedUser).toDomain();
                 });

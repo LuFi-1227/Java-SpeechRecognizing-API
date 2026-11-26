@@ -10,8 +10,7 @@ public record TransactionOutput(String id, String description, String category, 
         return new TransactionOutput(transaction.getId().id().toString(), 
         transaction.getDescription().toString(), 
         transaction.getCategory().toString(), 
-        BigDecimal.valueOf(transaction.getAmount())
-        .setScale(2, RoundingMode.HALF_UP)
+        BigDecimal.valueOf(transaction.getAmount(), 2)
         .doubleValue());
     }   
 }

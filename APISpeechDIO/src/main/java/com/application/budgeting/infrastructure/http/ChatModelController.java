@@ -1,4 +1,4 @@
-package com.application.budgeting;
+package com.application.budgeting.infrastructure.http;
 
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.web.bind.annotation.CrossOrigin;

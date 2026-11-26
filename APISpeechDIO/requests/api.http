@@ -1,12 +1,174 @@
-### Verificar se a API está funcionando
-# GET http://localhost:8080/api/chat-model/
+@baseUrl = http://localhost:8080
 
+###############################################################################
+### 1. AUTENTICAÇÃO E USUÁRIOS
+###############################################################################
 
-# GET https://congenial-yodel-vxpxwgqjp54cx75-8080.app.github.dev/api/chat-client?prompt="Olá, como você está?"
-
-POST http://localhost:8080/api/synthesize
+### 1.1 Criar Usuário (Público)
+# @name createUser
+POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-    "text": "Boa noite, Biazinha"
+  "name": "Luiz Silva",
+  "phone": "5511999998888",
+  "email": "luiz.silva@exemplo.com"
 }
+
+### Extrai dinamicamente o ID e Telefone do usuário recém-criado
+@userId = {{createUser.response.body.id}}
+@userPhone = {{createUser.response.body.phone}}
+
+### 1.2 Login com Telefone (Gera JWT Token)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "phone": "5511999998888"
+}
+
+### Extrai o token de autenticação JWT da resposta de login
+@authToken = {{login.response.body.token}}
+
+### 1.3 Listar Todos os Usuários (Protegido por JWT)
+GET {{baseUrl}}/users
+Authorization: Bearer {{authToken}}
+
+### 1.4 Buscar Usuário por ID (Protegido por JWT)
+GET {{baseUrl}}/users?id={{userId}}
+Authorization: Bearer {{authToken}}
+
+### 1.5 Buscar Usuário por Telefone (Protegido por JWT)
+GET {{baseUrl}}/users?phone=5511999998888
+Authorization: Bearer {{authToken}}
+
+### 1.6 Atualizar Dados do Usuário (Protegido por JWT)
+PUT {{baseUrl}}/users
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": "{{userId}}",
+  "name": "Luiz Silva Atualizado",
+  "phone": "5511999998888",
+  "email": "luiz.novo@exemplo.com"
+}
+
+###############################################################################
+### 2. TRANSAÇÕES FINANCEIRAS (BUDGETING)
+###############################################################################
+
+### 2.1 Criar Transação Manualmente (Valor em centavos: 15450 = R$ 154,50)
+POST {{baseUrl}}/users/{{userId}}/transactions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "description": "Supermercado Pão de Açúcar",
+  "category": "GROCERIES",
+  "amount": 15450
+}
+
+### 2.2 Criar Outra Transação (Categoria FARMA: 8990 = R$ 89,90)
+POST {{baseUrl}}/users/{{userId}}/transactions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "description": "Remédios na Farmácia Raia",
+  "category": "FARMA",
+  "amount": 8990
+}
+
+### 2.3 Criar Transação Categoria AUTO (6000 = R$ 60,00)
+POST {{baseUrl}}/users/{{userId}}/transactions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "description": "Gasolina Posto Shell",
+  "category": "AUTO",
+  "amount": 6000
+}
+
+### 2.4 Listar Transações por Categoria (GROCERIES)
+GET {{baseUrl}}/users/{{userId}}/transactions/GROCERIES
+Authorization: Bearer {{authToken}}
+
+### 2.5 Listar Transações por Categoria (FARMA)
+GET {{baseUrl}}/users/{{userId}}/transactions/FARMA
+Authorization: Bearer {{authToken}}
+
+### 2.6 Listar Transações por Categoria (AUTO)
+GET {{baseUrl}}/users/{{userId}}/transactions/AUTO
+Authorization: Bearer {{authToken}}
+
+###############################################################################
+### 3. ASSISTENTE INTELIGENTE COM SPRING AI (TOOL CALLING & ÁUDIO)
+###############################################################################
+
+### 3.1 Registrar Transação ou Consultar via Áudio Multimodal (Whisper -> IA Tool -> TTS)
+# O modelo Whisper transcreve o áudio, a IA analisa a intenção, chama a Tool correspondente
+# (persist-transaction ou list-transaction-by-category) e responde em áudio sintetizado (.wav)!
+POST {{baseUrl}}/users/{{userId}}/transactions/ai
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="audio_transacao.wav"
+Content-Type: audio/wav
+
+< ./sample_audio.wav
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###############################################################################
+### 4. ENDPOINTS AUXILIARES DE IA (SPEECH & CHAT)
+###############################################################################
+
+### 4.1 Sintetizar Texto em Áudio (TTS - Text to Speech)
+POST {{baseUrl}}/api/synthesize
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "text": "Olá Luiz! Sua despesa de cinquenta reais no supermercado foi registrada com sucesso."
+}
+
+### 4.2 Transcrever Arquivo de Áudio Direto (STT - Speech to Text)
+POST {{baseUrl}}/api/transcription
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="audio_teste.wav"
+Content-Type: audio/wav
+
+< ./sample_audio.wav
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 4.3 Chat Model Direto
+GET {{baseUrl}}/api/chat-model?prompt=Explique em uma frase o conceito de Clean Architecture.
+Authorization: Bearer {{authToken}}
+
+### 4.4 Chat Client com Fluent API
+GET {{baseUrl}}/api/chat-client?prompt=Me dê 3 dicas práticas para controle de orçamento pessoal.
+Authorization: Bearer {{authToken}}
+
+###############################################################################
+### 5. DOCUMENTAÇÃO SWAGGER / OPENAPI
+###############################################################################
+
+### 5.1 Obter OpenAPI JSON Specification (Público)
+GET {{baseUrl}}/v3/api-docs
+
+### 5.2 Acessar Swagger UI no Navegador:
+# http://localhost:8080/swagger-ui.html
+
+###############################################################################
+### 6. LIMPEZA / DELEÇÃO DE USUÁRIO
+###############################################################################
+
+### 6.1 Deletar Usuário Criado (Protegido por JWT)
+DELETE {{baseUrl}}/users?id={{userId}}
+Authorization: Bearer {{authToken}}
